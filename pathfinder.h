@@ -5,6 +5,6 @@
 
 #include <string.h>
 
-void findShortestPath(struct Graph*, struct tableEntry**, char*, char*);
+void findShortestPath(struct Graph*, struct hashTable*, char*, char*);
 
 #endif /*_PATHFINDER_H*/

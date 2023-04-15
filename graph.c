@@ -143,7 +143,7 @@ void setEdgeWeight(struct Edge* e, int weight){
     e->weight = weight;
 }
 
-void printGraph(struct Graph* g, struct tableEntry** table)
+void printGraph(struct Graph* g, struct hashTable* table)
 {
     int i;
     int j;

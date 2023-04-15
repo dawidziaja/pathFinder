@@ -14,7 +14,7 @@ int main( int argc, char *argv[]){
     char city2[15];
     int distance;
 
-    struct tableEntry** table = NULL;
+    struct hashTable* table = NULL;
     struct Graph* g = createGraph(24);
 
     if ( ( fp = fopen("energy-v23-1.txt", "r") ) == NULL ) {
@@ -22,7 +22,7 @@ int main( int argc, char *argv[]){
         return EXIT_FAILURE;
     }
 
-    if ( ( table = createTable() ) == NULL ) {
+    if ( ( table = createTable(24) ) == NULL ) {
         fputs ( "Cannot initialise table.\n", stderr );
         return EXIT_FAILURE;
     }
@@ -40,15 +40,13 @@ int main( int argc, char *argv[]){
     }
 
     fclose(fp);
-    //normaliseGraph(g);
-    //bellmanFord(g, 4, 0);
-    //recursiveDFS(g, 0, 20, visited, path);
+
     if(argc!=3){
         printf("incorrect arguments\n");
         return EXIT_FAILURE;
     }
     findShortestPath(g, table, argv[1],argv[2]);
-    //printGraph(g, table);
+
     destroyTable(table);
     destroyGraph(g);
     return EXIT_SUCCESS;

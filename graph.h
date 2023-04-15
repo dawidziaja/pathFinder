@@ -29,7 +29,7 @@ struct Edge** returnEdgeList(struct Node *);
 
 struct Node* returnNode(struct Graph* g, int id);
 
-void printGraph(struct Graph*, struct tableEntry**);
+void printGraph(struct Graph*, struct hashTable*);
 
 int getNodeCount(struct Graph*);
 
