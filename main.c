@@ -7,7 +7,7 @@
 
 #define MAX_PATHS ( 100 ) 
 
-int main(){
+int main( int argc, char *argv[]){
     FILE *fp = NULL;
     char line[70];
     char city1[15];
@@ -43,7 +43,11 @@ int main(){
     //normaliseGraph(g);
     //bellmanFord(g, 4, 0);
     //recursiveDFS(g, 0, 20, visited, path);
-    findShortestPath(g, table, "Lincoln","Birmingham");
+    if(argc!=3){
+        printf("incorrect arguments\n");
+        return EXIT_FAILURE;
+    }
+    findShortestPath(g, table, argv[1],argv[2]);
     //printGraph(g, table);
     destroyTable(table);
     destroyGraph(g);

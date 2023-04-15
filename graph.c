@@ -29,19 +29,24 @@ void destroyGraph(struct Graph * graph)
 
     struct Node * node = NULL;
 
+    //Iterate through each node
     for(i=0;i<graph->nodeCount;i++)
     {
         node = ( graph->nodes [ i ] );
 
+        //free each edge in the node's edgelist
         for(j=0;j<node->edges;j++)
 
             free(node->edgeList[j]);
         
-
+        //free the edgeList
         free(node->edgeList);
+        //free the node
         free(node);
     }
+    //free the nodelist
     free(graph->nodes);
+    //free the graph
     free(graph);
 }
 void addNode( struct Graph* g, int id )
@@ -56,6 +61,9 @@ void addNode( struct Graph* g, int id )
 
 }
 
+
+//This function assumes all edges are bidirectional, therefore it has to be
+//added at both the source and destination node.
 int addEdge(struct Graph* g, int from, int to, int weight)
 {
     //increment the number of edges by 2.
@@ -123,9 +131,10 @@ int getTotalEdges(struct Graph* g){
 int getConnectionWeight(struct Graph* g, int src, int dst){
     struct Node* sourceNode = g->nodes[src];
     struct Edge** edgeList = returnEdgeList(sourceNode);
+    //find the edge that connects to the destination
     for(int i=0;i<sourceNode->edges; i++){
-        if( edgeList[i]->destination == dst ){
-            return edgeList[i]->weight;
+        if( edgeList[i]->destination == dst ){//check if this is our node
+            return edgeList[i]->weight; //it is!
         }
     }
 }

@@ -1,92 +1,23 @@
 #include "pathfinder.h"
 
-#define INFINITY 999999
-#define CYCLE_SIZE 6
-
 struct pathList{
 	int** paths;
 	int size;
 };
 
-//Sets all negative edges to 0. gets rid of them (for now)
-void normaliseGraph(struct Graph * g)
-{
-	struct Node* currentNode;
-	struct Edge** edgeList;
-	int edgeCount;
-	int nodeCount = getNodeCount(g); //Get total number of Nodes
+void recursiveDFS(struct Graph*, int, int, int*, int*, struct pathList*);
+int* shortestPathInList(struct Graph*, struct pathList*, int, int);
+void printPath(struct Graph* g, struct tableEntry**, int*, int, int);
+int* allocatePath(int);
+void addPathToList(int* path, struct pathList*, int);
+struct pathList* createPathList();
+void resizePathList(struct pathList*, int);
+void destroyPathList(struct pathList*);
+int getPathWeight(struct Graph*, int*, int, int);
 
-	for(int i=0; i < nodeCount; i++){//Loop Node by node
 
-		currentNode = returnNode(g, i);
-		edgeCount = getEdgeCount(currentNode);
-		edgeList = returnEdgeList(currentNode);
-
-		for(int j=0; j < edgeCount; j++){//Loop through adjacency list
-
-			int edgeWeight = getEdgeWeight(edgeList[j]);
-
-			if(edgeWeight < 0){
-				setEdgeWeight(edgeList[j], 0);
-			}
-		}
-	}
-}
-
-void bellmanFord(struct Graph * g, int src, int dst)
-{
-	struct Node* currentNode;
-	struct Edge** edgeList;
-	int edgeCount, weight, from, to;
-
-	//get number of edges and nodes in graph
-	int edgeTotal = getTotalEdges(g);
-	int nodeTotal = getNodeCount(g);
-
-	//allocate some memory for the distance and predecessor arrays
-	int* distance = malloc(sizeof(int) * nodeTotal);
-	int* predecessor = malloc(sizeof(int) * nodeTotal);
-
-	//initialise values in distance and predecessor arrays
-	for(int i=0; i<nodeTotal; i++){
-		distance[i] = INFINITY;
-		predecessor[i] = 0;
-	}
-
-	//set the distance to the source node to 0
-	distance[src] = 0;
-
-	//relax edges v-1 times
-	for(int k=1; k < nodeTotal-1; k++){
-		for(int i=0; i < nodeTotal; i++){
-
-			currentNode = returnNode(g, i);
-			edgeCount = getEdgeCount(currentNode);
-			edgeList = returnEdgeList(currentNode);
-
-			for(int j=0; j<edgeCount; j++){
-				from = i;
-				to = getEdgeDestination(edgeList[j]);
-				weight = getEdgeWeight(edgeList[j]);
-
-				if( (distance[from] != INFINITY) && ( distance[to] > (distance[from] + weight) ))
-				{
-
-					distance[to] = distance[from] + weight;
-					predecessor[to] = from;
-
-				}
-			}
-		}
-	}
-	for(int i=0;i<nodeTotal;i++){
-		printf("%d\n", distance[i]);
-	}
-	free(distance);
-	free(predecessor);
-}
-
-void recursiveDFS(struct Graph* g, int src, int dst, int* visited, int* currentPath, struct pathList* pl)
+void recursiveDFS(struct Graph* g, int src, int dst, int* visited, 
+int* currentPath, struct pathList* pl)
 {
 	//mark the source node as visited 
 	visited[src] = 1;
@@ -120,16 +51,9 @@ void recursiveDFS(struct Graph* g, int src, int dst, int* visited, int* currentP
 		}
 	}
 }
-
-void resetPath(int* path, int size){
-	for(int i=0;i<size;i++)
-	{
-		path[i]=-1;
-	}
-}
-
 //Find shortest path from a to b on graph g
-void findShortestPath(struct Graph* g, struct tableEntry** table, char* a, char* b)
+void findShortestPath(struct Graph* g, struct tableEntry** table, 
+char* a, char* b)
 {
 	int ida = findEntry(table, genHash(a));
 	int idb = findEntry(table, genHash(b));
@@ -189,14 +113,16 @@ int* shortestPathInList(struct Graph* g, struct pathList* pl, int a, int b)
 	return pl->paths[smallest];
 }
 
-void printPath(struct Graph* g, struct tableEntry** table, int* path, int a, int b)
+void printPath(struct Graph* g, struct tableEntry** table, int* path, 
+int a, int b)
 {
 	int predecessor = path[b];
 
 	printf("\nPath from %s to %s : Total W : %d\n", getText(table, a), 
 	getText(table, b), getPathWeight(g, path,a,b));
 
-	printf("Conn from %s to %s (Weight: %d)\n", getText(table, b), getText(table, predecessor), 
+	printf("Conn from %s to %s (Weight: %d)\n", getText(table, b), 
+	getText(table, predecessor), 
 	getConnectionWeight(g, b, predecessor));
 
 	while(predecessor != a){
@@ -270,31 +196,3 @@ void destroyPathList(struct pathList* pl){
 	free(pl->paths);
 	free(pl);
 }
-
-//store predecessor to each node in current path in array. 
-//This means that tracing back a path should be possible
-/*
-void findPathDFS(struct Graph* g, int src, int dst, int* visited, int* predecessor)
-{
-	visited[src] = 1;
-	struct Node* currentNode = returnNode(g, node);
-	struct Edge** edgeList = returnEdgeList(currentNode);
-	int destination;
-	for(int i=0; i < getEdgeCount(currentNode); i++){
-		destination = getEdgeDestination(edgeList[i]);
-		if(destination == dst){
-			printf("we got one?\n");
-			traversePredecessors(predecessor, src, dst);
-		}
-		if( !visited[destination] ){
-			predecessor[src] = destination;
-			printf("traversin from %d to %d\n", node, destination);
-			findPathDFS(g, destination, visited);
-		}
-	}
-}
-
-void traversePredecessors(int *predecessor, int src){
-	int lastnode = predecessor[src];
-	while(lastnode )
-}*/
