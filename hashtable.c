@@ -1,4 +1,5 @@
 #include "hashtable.h"
+#include "error.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -14,21 +15,21 @@ struct hashTable {
     int size;
 };
 
-
-/*
-
-if table[index].key is  
-
-*/
 int addEntry(struct hashTable* table, char* item){
     int index;
     unsigned long key = genHash(item);
     struct tableEntry* newEntry = malloc(sizeof(struct tableEntry));
 
     if ( newEntry == NULL )
-        return -1;
+        errorHandler("Malloc fail!");
 
+    //allocate the string length + 1 for null term byte 
     newEntry->item = malloc((strlen(item)+1)*sizeof(char));
+
+    if(newEntry->item == NULL){
+        errorHandler("Malloc fail!");
+    }
+
     strcpy(newEntry->item, item);
     index = key%(table->size);
     while(table->entries[index] != NULL && table->entries[index]->key != key){
@@ -62,8 +63,20 @@ char* getText(struct hashTable* table, int id)
 
 struct hashTable* createTable(int size){
     struct hashTable* table = malloc(sizeof(struct hashTable));
+
+    if(table == NULL){
+        errorHandler("Malloc fail!");
+    }
+
     table->size = size;
     table->entries = calloc(size, sizeof(struct tableEntry*));
+
+    if(table->entries == NULL){
+        errorHandler("Malloc fail!");
+    }
+
+    return table;
+
 }
 
 void printTable ( struct hashTable* table )

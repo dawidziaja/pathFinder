@@ -1,4 +1,5 @@
 #include "graph.h"
+#include "error.h"
 
 struct Edge {
     int destination;
@@ -16,7 +17,17 @@ struct Graph {
 };
 struct Graph* createGraph(int nodeCount){
     struct Graph* graph = malloc(sizeof(struct Graph));
+
+    if(graph==NULL){
+		errorHandler("Malloc fail!");
+	}
+
     graph->nodes=calloc(nodeCount, sizeof(struct Node*));
+
+    if(graph->nodes == NULL){
+		errorHandler("Malloc fail!");
+	}
+
     graph->nodeCount = 0;
     graph->edgeCount = 0;
     return(graph);
@@ -53,6 +64,11 @@ void addNode( struct Graph* g, int id )
 {
     if( g->nodes[id] == NULL ){
         g->nodes[id] = malloc( sizeof( struct Node ) );
+
+        if(g->nodes[id] == NULL){
+		    errorHandler("Malloc fail!");
+	    }
+
         g->nodes[id]->id = id;
         g->nodeCount++;
         g->nodes[id]->edges = 0;
@@ -64,7 +80,7 @@ void addNode( struct Graph* g, int id )
 
 //This function assumes all edges are bidirectional, therefore it has to be
 //added at both the source and destination node.
-int addEdge(struct Graph* g, int from, int to, int weight)
+void addEdge(struct Graph* g, int from, int to, int weight)
 {
     //increment the number of edges by 2.
     g->edgeCount+=2;
@@ -78,11 +94,19 @@ int addEdge(struct Graph* g, int from, int to, int weight)
     a->edgeList = realloc(a->edgeList, (sizeof(struct Node*) * a->edges) );
     b->edgeList = realloc(b->edgeList, (sizeof(struct Node*) * b->edges) );
 
+    if((a->edgeList == NULL) || (b->edgeList == NULL)){
+		errorHandler("realloc fail!");
+	}
+
     //allocate the memory for a new edge
     int currentEdgeA = a->edges-1;
     int currentEdgeB = b->edges-1;
     a->edgeList[currentEdgeA] = malloc(sizeof(struct Edge));
     b->edgeList[currentEdgeB] = malloc(sizeof(struct Edge));
+
+    if((a->edgeList[currentEdgeA] == NULL) || (b->edgeList[currentEdgeB] == NULL)){
+		errorHandler("realloc fail!");
+	}
 
     //Create new edge at source and destination
     a->edgeList[currentEdgeA]->destination = to;

@@ -1,4 +1,5 @@
 #include "pathfinder.h"
+#include "error.h"
 
 
 //needs to be longer than any path
@@ -65,6 +66,10 @@ char* a, char* b)
 	int* shortestPath = malloc(sizeof(int)*getNodeCount(g));
 	int* visited =  malloc(sizeof(int)*getNodeCount(g));
 	int* shortestWeight = malloc(sizeof(int));
+	if( (currentPath == NULL) || (shortestPath == NULL)
+	|| (visited == NULL) || (shortestWeight== NULL)){
+		errorHandler("Malloc fail!");
+	}
 	*shortestWeight = INFINITY;
 
 	//set initial values

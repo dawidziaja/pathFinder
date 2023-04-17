@@ -15,7 +15,7 @@ struct Graph* createGraph(int);
 void destroyGraph(struct Graph*);
 
 
-int addEdge(struct Graph*, int, int, int);
+void addEdge(struct Graph*, int, int, int);
 
 
 void addNode(struct Graph*, int);
