@@ -12,7 +12,7 @@ int main( int argc, char *argv[]){
     struct hashTable* table = ms->table;
     free(ms);
 
-    findShortestPath(g, table, "Manchester", "Perth");
+    loadPairs(g, table, "citypairs.txt");
     destroyGraph(g);
     destroyTable(table);
 }

@@ -79,11 +79,11 @@ char* a, char* b)
 		shortestPath[i] = -1;
     }
 	//run dfs
-	recursiveDFS(g, ida, idb, visited, currentPath, shortestPath, 
+	recursiveDFS(g, idb, ida, visited, currentPath, shortestPath, 
 	shortestWeight);
 
 
-	printPath(g, table, shortestPath, ida, idb);
+	printPath(g, table, shortestPath, idb, ida);
 
 	//free our pointers :)
 	free(currentPath);
@@ -98,21 +98,22 @@ int a, int b)
 {
 	int predecessor = path[b];
 
-	printf("Path from %s to %s : Total W : %d\n", getText(table, a), 
-	getText(table, b), getPathWeight(g, path,b));
+	printf("Path from %s to %s : Total W : %d\n", getText(table, b), 
+	getText(table,a), getPathWeight(g, path,b));
 
-	printf("Conn from %s to %s (Weight: %d)\n", getText(table, b), 
+	printf("%s->%s (Weight: %d)\n", getText(table, b), 
 	getText(table, predecessor), 
 	getConnectionWeight(g, b, predecessor));
 
 	while(predecessor != a){
 
-		printf("Conn from %s to %s (Weight: %d)\n", getText(table, predecessor), 
+		printf("%s->%s (Weight: %d)\n", getText(table, predecessor), 
 		getText(table, path[predecessor]), 
 		getConnectionWeight(g, predecessor, path[predecessor]));
 
 		predecessor = path[predecessor];
 	}
+	putchar('\n');
 }
 
 int getPathWeight(struct Graph* g, int* path, int b)

@@ -31,7 +31,6 @@ struct mapStruct* loadEnergy(const char* fn)
 	struct Graph* g = createGraph(cityCount);
 
 	struct hashTable* table = createTable(cityCount);
-	printf("%d\n", cityCount);
 
 
 	while(fgets(line, sizeof(line), fp) != NULL){
@@ -70,7 +69,6 @@ int countCities(const char* fn)
 	int c1a, c2a;
 	unsigned long c1h, c2h;
 	unsigned long* cities = malloc(sizeof(unsigned long)*MAX_CITIES);
-	int distance;
 	int cityCount = 0;
 
 	if(cities==NULL){
@@ -80,7 +78,7 @@ int countCities(const char* fn)
     while(fgets(line, sizeof(line), fp) != NULL){
 		c1a = 1;
 		c2a = 1;
-        sscanf(line, "%s\t%s\t%d[^\n]", city1, city2, &distance);
+        sscanf(line, "%s\t%s[^\n]", city1, city2);
 
 		c1h = genHash(city1); //use the hash function from the hashtable
 		c2h = genHash(city2); //so we dont need to compare strings
@@ -106,5 +104,20 @@ int countCities(const char* fn)
 	fclose(fp);
 	free(cities);
 	return cityCount;
+
+}
+
+void loadPairs(struct Graph* g, struct hashTable* ht, const char* fn){
+	FILE* fp = loadFile(fn);
+
+	//temporary buffers
+	char line[70];
+	char city1[15];
+	char city2[15];
+
+	while(fgets(line, sizeof(line), fp) != NULL){
+		sscanf(line, "%s\t%s[^\n]", city1, city2);
+		findShortestPath(g, ht, city1, city2);
+	}
 
 }
