@@ -1,7 +1,7 @@
 #include "hashtable.h"
 #include "graph.h"
 #include "pathfinder.h"
-#include "io.c"
+#include "io.h"
 
 int main(int argc, char *argv[]){
 

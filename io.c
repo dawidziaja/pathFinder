@@ -1,4 +1,7 @@
 #include "io.h"
+#include "graph.h"
+#include "hashtable.h"
+#include "pathfinder.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

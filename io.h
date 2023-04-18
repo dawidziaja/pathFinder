@@ -1,9 +1,6 @@
 #ifndef IO_H /*Include guard*/
 #define IO_H
 
-#include "graph.h"
-#include "hashtable.h"
-
 struct mapStruct{
 	struct hashTable* table;
 	struct Graph* graph;
