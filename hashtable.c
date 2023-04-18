@@ -8,71 +8,79 @@ struct tableEntry {
     unsigned long key;
     char* item;
 };
-
-
 struct hashTable {
     struct tableEntry** entries;
-    int size;
+    unsigned int size;
 };
 
 int addEntry(struct hashTable* table, char* item){
-    int index;
+    unsigned int index;
+    //generate a key for the item
     unsigned long key = genHash(item);
+    //allocate some memory for our new entry
     struct tableEntry* newEntry = malloc(sizeof(struct tableEntry));
 
-    if ( newEntry == NULL )
-        errorHandler("Malloc fail!");
-
+    if ( newEntry == NULL ){
+        fprintf(stderr, "Malloc fail!\n");
+        return -1;
+    }
     //allocate the string length + 1 for null term byte 
     newEntry->item = malloc((strlen(item)+1)*sizeof(char));
 
     if(newEntry->item == NULL){
-        errorHandler("Malloc fail!");
+        fprintf(stderr, "Malloc fail!\n");
+        return -1;
     }
 
+    //copy over item name from input to our new table entry
     strcpy(newEntry->item, item);
-    index = key%(table->size);
-    while(table->entries[index] != NULL && table->entries[index]->key != key){
-        index++;
-        if(index==table->size){
-            index=0;
-        }
+
+    //get the starting index of the table
+    index = key % (table->size);
+
+    //increment the index until a null entry is found.
+    while((table->entries[index] != NULL) && (table->entries[index]->key != key)){
+        index = ( index + 1 ) % (table->size);
     }
     newEntry->key=key;
     table->entries[index]=newEntry;
-    return index;
+
+    return (int)index;
 }
 
 int findEntry(struct hashTable* table, unsigned long key)
 {
-    unsigned long index = key % (table->size);
+    unsigned int index = (key % (table->size));
     while( table->entries[index] != NULL ){
-        if( table->entries[ index ]->key == key )
-            return index;
-
+        if( table->entries[index]->key == key ){
+            return (int)index;
+        }
+        //wraps around search if i exceeds the table size.
         index = ( index + 1 ) % (table->size);
-        /*IF ENTRY DOES NOT EXIST AND TABLE IS FULL THIS WILL LOOP FOREVER. (although final element should always be null so its chillin)*/
+
     }
     return -1;
 }
 
-char* getText(struct hashTable* table, int id)
+char* getText(struct hashTable* table, unsigned int id)
 {
     return table->entries[id]->item;
 }
 
-struct hashTable* createTable(int size){
+struct hashTable* createTable(unsigned int size){
     struct hashTable* table = malloc(sizeof(struct hashTable));
 
     if(table == NULL){
-        errorHandler("Malloc fail!");
+        fprintf(stderr, "Malloc fail!\n");
+        return NULL;
     }
 
     table->size = size;
     table->entries = calloc(size, sizeof(struct tableEntry*));
 
     if(table->entries == NULL){
-        errorHandler("Malloc fail!");
+        fprintf(stderr, "Malloc fail!\n");
+        return NULL;
     }
 
     return table;
@@ -81,9 +89,8 @@ struct hashTable* createTable(int size){
 
 void printTable ( struct hashTable* table )
 {
-    int i;
 
-    for ( i = 0; i < table->size; i++ )
+    for (unsigned int i = 0; i < table->size; i++ )
         if ( table->entries [ i ] != NULL )
             printf ( "Table index %d holds item %s with hash %lu\n",
                 i, table->entries [ i ]->item, table->entries [ i ]->key );
@@ -99,17 +106,18 @@ unsigned long genHash(char *str)
     char c;
 
     while ( ( c = *str++ ) != '\0' )
-        hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+        hash = ((hash << 5) + hash) + (unsigned long)c; /* hash * 33 + c */
 
     return hash;
 }
 
 void destroyTable(struct hashTable* table)
 {
-    int i;
-    for( i=0; i<table->size; i++ ){
-        free( table->entries[i]->item );
-        free( table->entries[i] );
+    for(unsigned int i=0; i<table->size; i++ ){
+        if(table->entries[i] != NULL){
+            free( table->entries[i]->item );
+            free( table->entries[i] );
+        }
     }
     free(table->entries);
     free(table);

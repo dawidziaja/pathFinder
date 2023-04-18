@@ -1,5 +1,5 @@
-#ifndef _IO_H /*Include guard*/
-#define _IO_H
+#ifndef IO_H /*Include guard*/
+#define IO_H
 
 #include "graph.h"
 #include "hashtable.h"
@@ -10,8 +10,7 @@ struct mapStruct{
 };
 
 struct mapStruct* loadEnergy(const char*);
-
-int countCities(const char* fn);
+unsigned int loadPairs(struct Graph* g, struct hashTable* ht, const char* fn);
 
 
 //This is the most straight forward way of returning the hashtable and the graph

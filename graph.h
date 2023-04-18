@@ -1,5 +1,5 @@
-#ifndef _GRAPH_H
-#define _GRAPH_H
+#ifndef GRAPH_H
+#define GRAPH_H
 #include "hashtable.h"
 #include <stdlib.h>
 #include <stdio.h>
@@ -10,36 +10,36 @@ struct Node;
 
 struct Edge;
 
-struct Graph* createGraph(int);
+struct Graph* createGraph(unsigned int);
 
 void destroyGraph(struct Graph*);
 
 
-void addEdge(struct Graph*, int, int, int);
+unsigned int addEdge(struct Graph*, unsigned int, unsigned int, int);
 
 
-void addNode(struct Graph*, int);
+unsigned int addNode(struct Graph*, unsigned int);
 
 
 int getEdgeWeight(struct Edge*);
 
-int getEdgeDestination(struct Edge*);
+unsigned int getEdgeDestination(struct Edge*);
 
 struct Edge** returnEdgeList(struct Node *);
 
-struct Node* returnNode(struct Graph* g, int id);
+struct Node* returnNode(struct Graph*, unsigned int);
 
 void printGraph(struct Graph*, struct hashTable*);
 
-int getNodeCount(struct Graph*);
+unsigned int getNodeCount(struct Graph*);
 
-int getEdgeCount(struct Node*);
+unsigned int getEdgeCount(struct Node*);
 
-int getTotalEdges(struct Graph*);
+unsigned int getTotalEdges(struct Graph*);
 
-int getNodeID(struct Node* n);
+unsigned int getNodeID(struct Node* n);
 
-int getConnectionWeight(struct Graph* g, int src, int dst);
+int getConnectionWeight(struct Graph* g, unsigned int src, unsigned int dst);
 
 void setEdgeWeight(struct Edge*, int weight);
 

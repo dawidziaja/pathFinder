@@ -1,10 +1,10 @@
-#ifndef _PATHFINDER_H
-#define _PATHFINDER_H
+#ifndef PATHFINDER_H
+#define PATHFINDER_H
 
 #include "graph.h"
 
 #include <string.h>
 
-void findShortestPath(struct Graph*, struct hashTable*, char*, char*);
+unsigned int findShortestPath(struct Graph*, struct hashTable*, char*, char*);
 
 #endif /*_PATHFINDER_H*/
